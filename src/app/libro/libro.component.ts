@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Categoria } from '../modelos/categoria';
 import { Libro } from '../modelos/libro';
+import { CategoriaService } from '../servicios/categoria.service';
 import { LibroService } from '../servicios/libro.service';
 
 @Component({
@@ -10,14 +12,17 @@ import { LibroService } from '../servicios/libro.service';
 })
 export class LibroComponent implements OnInit {
 
+  //Variables para almacenar respuestas de consultas API REST.
   libros:Array<Libro> = new Array<Libro>();
+  categorias:Array<Categoria> = new Array<Categoria>();
+
   modal = false;
 
   // @ts-ignore
   libroForm: FormGroup;
   libro_up:Libro;
 
-  constructor(private servicio: LibroService,private fbGenerator: FormBuilder) { 
+  constructor(private servicio: LibroService, private categoria_servicio: CategoriaService,private fbGenerator: FormBuilder) { 
     this.libro_up = new Libro();
        
   }
@@ -34,6 +39,11 @@ export class LibroComponent implements OnInit {
     this.servicio.getLibros().subscribe((libros)=>{
       this.libros = libros;
     });
+
+    this.categoria_servicio.getCategorias().subscribe((categorias)=>{
+      this.categorias = categorias;
+    })
+
   }
 
   new_libro(){
